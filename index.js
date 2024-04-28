@@ -31,6 +31,14 @@ async function run() {
     await client.connect();
     const artCraftCollection = client.db('ArtCraftDB').collection('art-craft');
 
+    // Get All Data
+    app.get('/getsCraft', async(req, res) => {
+      const cursor = artCraftCollection.find();
+      const result = await cursor.toArray();
+
+      res.send(result);
+    })
+
     // Add Single Craft 
     app.post('/addCraft', async(req, res) => {
       const newCraft = req.body;
