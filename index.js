@@ -1,11 +1,12 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-
 const express = require('express');
 const app = express();
+const cors = require('cors')
 const port = process.env.PORT || 5000;
-
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // Middleware
+app.use(cors());
+app.use(express.json());
 
 //ArtCraft
 // xjfb1Wjlkk0YIp29
@@ -28,6 +29,15 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    const artCraftCollection = client.db('ArtCraftDB').collection('art-craft');
+
+    // Add Single Craft 
+    app.post('/addCraft', async(req, res) => {
+      const newCraft = req.body;
+      const result = await artCraftCollection.insertOne(newCraft);
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
