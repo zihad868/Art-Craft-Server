@@ -48,6 +48,15 @@ async function run() {
       res.send(result);
     })
 
+
+    // Get Craft By Email Address
+    app.get('/myCraft/:email', async(req, res) => {
+      const emailId = req.params.email;
+      const query = {email: emailId};
+      const result = await artCraftCollection.find(query).toArray();
+      res.send(result);
+    })
+
     // Add Single Craft 
     app.post('/addCraft', async(req, res) => {
       const newCraft = req.body;
