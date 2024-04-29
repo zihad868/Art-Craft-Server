@@ -64,6 +64,19 @@ async function run() {
       res.send(result);
     })
 
+    // Update Single Craft
+    app.put('/updateCraft/:id', async(req, res) => {
+      const UpdatedId = req.params.id;
+      const bodyData = req.body;
+      const update = { $set: bodyData };
+      const query = { _id: new ObjectId(UpdatedId) };
+      const result = await artCraftCollection.updateOne(query, update);
+      res.send(result);
+    })
+    
+    
+    
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
