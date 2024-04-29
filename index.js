@@ -30,6 +30,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const artCraftCollection = client.db('ArtCraftDB').collection('art-craft');
+    const subcategoryCollection = client.db('ArtCraftDB').collection('subcategory');
 
     // Get All Data
     app.get('/getsCraft', async(req, res) => {
@@ -83,7 +84,33 @@ async function run() {
     })
     
     
-    
+
+
+    // SubCategory Data
+    app.post('/addCategory', async(req, res) => {
+      const newCategory = req.body;
+      const result = await subcategoryCollection.insertOne(newCategory);
+      res.send(result);
+    })
+
+
+    // Get All Subcategory
+    app.get('/category', async(req, res) => {
+       const cursor = subcategoryCollection.find();
+       const result = await cursor.toArray();
+
+       res.send(result);
+    })
+
+
+    // Get Only Category Wise Data
+    app.get('/categoryDetails/:category', async(req, res) => {
+      const subCategory = req.params.category;
+      const query = {subcategoryName: subCategory};
+      const result = await artCraftCollection.find(query).toArray();
+      res.send(result);
+    })
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
