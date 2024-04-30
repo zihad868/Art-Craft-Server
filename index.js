@@ -11,8 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 
-console.log(process.env.DB_USER)
-console.log(process.env.DB_PASS)
+
 
 
 // var uri = "mongodb://<username>:<password>@ac-62j8ihz-shard-00-00.7lbrva6.mongodb.net:27017,ac-62j8ihz-shard-00-01.7lbrva6.mongodb.net:27017,ac-62j8ihz-shard-00-02.7lbrva6.mongodb.net:27017/?ssl=true&replicaSet=atlas-g1t94d-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
@@ -31,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
+    await client.connect();
     const artCraftCollection = client.db('ArtCraftDB').collection('art-craft');
     const subcategoryCollection = client.db('ArtCraftDB').collection('subcategory');
 
@@ -56,8 +55,15 @@ async function run() {
     // Get Craft By Email Address
     app.get('/myCraft/:email', async(req, res) => {
       const emailId = req.params.email;
-      const query = {email: emailId};
-      const result = await artCraftCollection.find(query).toArray();
+      const query = {email: emailId };
+
+      let result;
+
+      if(req.query.sort === 'true'){
+        result = await artCraftCollection.find(query).sort({ rating: -1 }).toArray();
+      } else{
+        result = await artCraftCollection.find(query).toArray();
+      }
       res.send(result);
     })
 
@@ -86,6 +92,8 @@ async function run() {
       res.send(result);
     })
     
+    
+    // Sort Data
     
 
 
